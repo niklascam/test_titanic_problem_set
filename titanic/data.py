@@ -71,3 +71,24 @@ def concatenator(df1,df2):
     all_df["set"] = "train"
     all_df.loc[all_df.Survived.isna(), "set"] = "test"
     return all_df
+
+
+def family_size(data):
+    """
+    Create a column containing the size of the family.
+    """
+    data["Family Size"] = data["SibSp"] + data["Parch"] + 1
+    return data
+
+
+def age_interval(data, age_col="Age"):
+    """
+    Split the age column into age intervals creating a new column called 'Age Interval'.
+    """
+    data["Age Interval"] = 0.0
+    data.loc[data[age_col] <= 16, "Age Interval"] = 0
+    data.loc[(data[age_col] > 16) & (data[age_col] <= 32), "Age Interval"] = 1
+    data.loc[(data[age_col] > 32) & (data[age_col] <= 48), "Age Interval"] = 2
+    data.loc[(data[age_col] > 48) & (data[age_col] <= 64), "Age Interval"] = 3
+    data.loc[data[age_col] > 64, "Age Interval"] = 4
+    return data
