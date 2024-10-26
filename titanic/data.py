@@ -146,3 +146,50 @@ def process_names(data):
     """
     data[["Family Name", "Title", "Given Name", "Maiden Name"]] = data.apply(lambda row: parse_names(row), axis=1)
     return data
+
+
+def feat_family_size_int(dataset):
+    """
+    Create feature for family type based on family size.
+    """
+    dataset["Family Type"] = dataset["Family Size"]
+    dataset.loc[dataset["Family Size"] == 1, "Family Type"] = "Single"
+    dataset.loc[
+        (dataset["Family Size"] > 1) & (dataset["Family Size"] < 5), "Family Type"
+    ] = "Small"
+    dataset.loc[(dataset["Family Size"] >= 5), "Family Type"] = "Large"
+    return dataset
+
+
+def feat_title(dataset):
+    dataset["Titles"] = dataset["Title"]
+    # unify `Miss`
+    dataset["Titles"] = dataset["Titles"].replace("Mlle.", "Miss.")
+    dataset["Titles"] = dataset["Titles"].replace("Ms.", "Miss.")
+    # unify `Mrs`
+    dataset["Titles"] = dataset["Titles"].replace("Mme.", "Mrs.")
+    # unify Rare
+    dataset["Titles"] = dataset["Titles"].replace(
+        [
+            "Lady.",
+            "the Countess.",
+            "Capt.",
+            "Col.",
+            "Don.",
+            "Dr.",
+            "Major.",
+            "Rev.",
+            "Sir.",
+            "Jonkheer.",
+            "Dona.",
+        ],
+        "Rare",
+    )
+    return dataset
+
+
+def analyse_table_survived_by_x_y(data, x, y):
+    """
+    Create a table showing the number of survived and not survived passengers for each unique value of x and y.
+    """
+    return data[[x, y, "Survived"]].groupby([x, y], as_index=False).mean()
