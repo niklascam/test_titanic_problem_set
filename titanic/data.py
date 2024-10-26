@@ -59,5 +59,15 @@ def unique_values_table(data):
         uniques.append(unique)
     tt['Uniques'] = uniques
     np.transpose(tt)
-    
+
     return tt
+
+
+def concatenator(df1,df2):
+    """
+    Concatenate two dataframes and add a column 'set' to identify test and train set.
+    """
+    all_df = pd.concat([df1, df2], axis=0)
+    all_df["set"] = "train"
+    all_df.loc[all_df.Survived.isna(), "set"] = "test"
+    return all_df
