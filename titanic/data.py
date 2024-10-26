@@ -193,3 +193,12 @@ def analyse_table_survived_by_x_y(data, x, y):
     Create a table showing the number of survived and not survived passengers for each unique value of x and y.
     """
     return data[[x, y, "Survived"]].groupby([x, y], as_index=False).mean()
+
+
+def feat_sex_numeric(dataset):
+    mapped_sex = dataset["Sex"].map({"female": 1, "male": 0})
+    if mapped_sex.isna().any():
+        print("Warning: NaN values found after mapping!")
+        print(mapped_sex.isna().sum(), "NaN values")
+    dataset["Sex"] = mapped_sex.astype(int)
+    return dataset
