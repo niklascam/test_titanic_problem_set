@@ -44,3 +44,20 @@ def most_freq_table(data):
     np.transpose(tt)
     
     return tt
+
+
+def unique_values_table(data):
+    """
+    Create a table with unique values.
+    """
+    total = data.count()
+    tt = pd.DataFrame(total)
+    tt.columns = ['Total']
+    uniques = []
+    for col in data.columns:
+        unique = data[col].nunique()
+        uniques.append(unique)
+    tt['Uniques'] = uniques
+    np.transpose(tt)
+    
+    return tt
